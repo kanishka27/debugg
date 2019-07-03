@@ -1,0 +1,256 @@
+body {
+  /* position: relative;
+  background-color: #f5f5f5;
+  background-image: url("../../bg.jpg"); */
+  background: url("../bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+  height: 100%;
+}
+.navStyle {
+  font-size: 50px;
+}
+
+.top {
+  width: 100%;
+  margin: 0;
+  padding: 15px;
+}
+
+.formstyle {
+  width: 50%;
+
+  padding-bottom: 1%;
+}
+
+.buttonstyle {
+  margin: auto;
+  display: block;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  background-color: #106ebe;
+  color: white !important;
+}
+.buttonstylenav {
+  float: right;
+  background-color: #1554a7;
+  color: white !important;
+}
+
+.formtop {
+  padding-bottom: 1%;
+}
+
+.tablestyle {
+  margin-top: 2%;
+  background-color: #ffffff;
+}
+
+.rowC {
+  display: flex;
+  flex-direction: row;
+}
+
+.dialogbutton {
+  margin-left: 15px;
+}
+
+.back {
+  align-content: flex-start;
+}
+
+.continue {
+  align-content: flex-end;
+}
+
+.full-width {
+  width: 100%;
+}
+
+tr.noBorder td {
+  border: 0;
+}
+
+.back {
+  height: 75px;
+  background-color: white;
+  background-repeat: repeat;
+  width: 100%;
+}
+
+.text-head {
+  margin-top: 10px;
+  margin-left: 5%;
+  vertical-align: middle;
+}
+h1:hover {
+  text-decoration: underline;
+}
+
+thead {
+  background-color: #106ebe;
+  color: white;
+}
+
+thead > tr {
+  height: 85px;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.tablestyle tr td:nth-child(1) {
+  width: 10%;
+}
+.tablestyle tr td:nth-child(2) {
+  width: 50%;
+}
+.tablestyle tr td:nth-child(3) {
+  width: 40%;
+}
+
+.tabletext1 {
+  padding-left: 20%;
+}
+
+.tdt2 {
+  padding-left: 13% !important;
+}
+
+.tdt1 {
+  padding-left: 5% !important;
+}
+
+.inputheadstyle {
+  margin-left: 40% !important;
+  font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI",
+    -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 28px;
+  font-weight: 100;
+  display: block;
+  color: inherit;
+}
+
+/* css of topNav Start */
+.topspace {
+  margin-top: 7%;
+  margin-bottom: 1%;
+}
+
+.topNav {
+  background-color: #005b70;
+  background-repeat: repeat;
+  /* height: 250px; */
+}
+
+.desc {
+  color: white;
+  text-align: center;
+  font-size: 25px;
+  padding-top: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+button[type="submit"]:active {
+  background: #135995;
+  color: white;
+}
+button[type="submit"]:focus {
+  background: #135995;
+  color: white;
+}
+button[type="submit"]:hover {
+  background: #135995;
+  color: white;
+}
+
+.spaceout {
+  margin-left: 25% !important;
+}
+
+.spaceoutAbout {
+  margin-left: 10%;
+  margin-top: 7%;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.righttext {
+  text-align: right;
+}
+
+.display {
+  display: inline;
+}
+
+.nobreak {
+  white-space: nowrap;
+}
+
+.topNav .desc {
+  color: white;
+  text-align: center;
+  font-size: 25px;
+  padding-top: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.logo.sandbox-correct-pronounciation {
+  padding: 3em 0 0.5em 0;
+}
+
+.logo .heading-correct-pronounciation {
+  margin: auto;
+  text-align: center;
+  position: relative;
+}
+
+.logo h1 {
+  color: #fff;
+  font-family: "Cardo", serif;
+  font-size: 1.4em;
+  font-weight: normal;
+  font-style: italic;
+  letter-spacing: 0.1em;
+  line-height: 2.2em;
+}
+
+.logo em {
+  font-family: "EB Garamond", serif;
+  font-size: 250%;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  font-style: normal;
+  padding-top: 0.1em;
+  text-shadow: 0.07em 0.07em 0 rgba(0, 0, 0, 0.1);
+}
+
+.logo .bottom {
+  font-size: 1.5em;
+  letter-spacing: 0.07em;
+  font-size: 1em;
+  display: block;
+}
+
+/* css of topNav End */
+/* Aman Css End */
+
+.approveTableBody {
+  margin-top: 12%;
+  background-color: #ffffff;
+}
+.borderLeft {
+  border-left: 1px solid #ced4da;
+}
+
+.logOut {
+  color: white;
+  margin-left: 17px;
+  cursor: pointer;
+}
