@@ -5,26 +5,19 @@ import { withAITracking } from "@microsoft/applicationinsights-react-js";
 import { ai } from "../../TelemetryService";
 import { SeverityLevel } from "@microsoft/applicationinsights-web";
 
-const InputForm = ({
-  url,
-  accessToken,
-  onSave,
-  movDiv,
-  onChange,
-  processing = false
-}) => {
+const InputForm = ({ url, accessToken, onSave, movDiv, onChange }) => {
   const trackEvent = () => ai.appInsights.trackEvent({ name: "Submit Form" });
-  const trackException = ex =>
+  const trackException = err =>
     ai.appInsights.trackException({
-      error: new Error("some error" + ex),
+      error: new Error("some error" + err),
       severityLevel: SeverityLevel.Error
     });
 
   useEffect(() => {
     try {
       if (url.length < 4) throw new Error("Url entered is too short");
-    } catch (ex) {
-      trackException(ex);
+    } catch (error) {
+      trackException(error);
     }
   }, [url]);
 
@@ -55,12 +48,11 @@ const InputForm = ({
 
         <button
           type="submit"
-          disabled={processing}
           className="buttonstyle btn"
           onClick={trackEvent}
           data-test="SubmitButton"
         >
-          {processing ? "Processing..." : "Submit"}
+          {"Submit"}
         </button>
       </form>
     </div>
@@ -71,9 +63,7 @@ InputForm.propTypes = {
   url: PropTypes.string.isRequired,
   accessToken: PropTypes.string.isRequired,
   onSave: PropTypes.func.isRequired,
-
-  onChange: PropTypes.func.isRequired,
-  processing: PropTypes.bool
+  onChange: PropTypes.func.isRequired
 };
 
 export default withAITracking(ai.reactPlugin, InputForm, "prrt");

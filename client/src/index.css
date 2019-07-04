@@ -254,3 +254,11 @@ button[type="submit"]:hover {
   margin-left: 17px;
   cursor: pointer;
 }
+
+.display-linebreak {
+  white-space: pre-line;
+}
+
+.line-breaks {
+  word-wrap: break-word;
+}

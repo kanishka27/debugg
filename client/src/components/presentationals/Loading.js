@@ -1,5 +1,5 @@
 import React from "react";
-import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
+import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib-commonjs/Spinner";
 
 const Loading = () => (
   <Spinner

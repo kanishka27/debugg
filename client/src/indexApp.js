@@ -9,44 +9,24 @@ import { createBrowserHistory } from "history";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { reactAI } from "react-appinsights";
 import { ApplicationInsights } from "@microsoft/applicationinsights-web";
-import Users from "./components/Users";
-import Approval from "./components/Approval";
+import PendingApprovals from "./components/PendingApprovals/PendingApprovals";
+import Approval from "./components/Approval/Approval";
 import Null from "./components/Null";
 import { withAdalLoginApi } from "./config/adalConfig";
 
-const ProtectedAppArea = withAdalLoginApi(Users);
-
-
-
 const store = configureStore();
-const ProtectedAppDashboard = withAdalLoginApi(Users);
-const ProtectedAppTvboard = withAdalLoginApi(Approval);
-
-// render(
-//   <ReduxProvider store={store}>
-//     <Router>
-//       <Switch>
-//         <Route exact path="/" component={App} />
-//         <Route path="/user" component={ProtectedAppDashboard} />
-//         <Route path="/approval" component={ProtectedAppTvboard} />
-//         <Route path="/null" component={Null} />
-//       </Switch>
-//     </Router>
-//   </ReduxProvider>,
-//   document.getElementById("root")
-// );
 
 function indexApp() {
-  const ProtectedAppDashboard = withAdalLoginApi(Users);
-  const ProtectedAppTvboard = withAdalLoginApi(Approval);
-
   return (
     <ReduxProvider store={store}>
       <Router>
         <Switch>
           <Route exact path="/" component={App} />
-          <Route path="/user" component={ProtectedAppDashboard} />
-          <Route path="/approval" component={ProtectedAppTvboard} />
+          <Route
+            path="/pendingapprovals"
+            component={withAdalLoginApi(PendingApprovals)}
+          />
+          <Route path="/approval" component={withAdalLoginApi(Approval)} />
           <Route path="/null" component={Null} />
         </Switch>
       </Router>

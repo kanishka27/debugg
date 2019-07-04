@@ -8,6 +8,9 @@ import * as formActions from "../redux/actions/formActions";
 import * as paramsAction from "../redux/actions/paramsAction";
 import { Text } from "office-ui-fabric-react/lib/Text";
 import { Stack } from "office-ui-fabric-react/lib/Stack";
+import AbortController from "abort-controller";
+import * as checkActions from "../redux/actions/checkActions";
+import InputsHeader from "./presentationals/InputHeader";
 
 import NavbarHome from "./presentationals/NavbarHome";
 import NavbarFirst from "./presentationals/NavbarFirst";
@@ -31,51 +34,37 @@ const RootPage = ({
   submitForm,
   updateUrl,
   updateAccessToken,
-  checkStatus,
   resetForm,
-  resetParams
+  resetParams,
+  resetChecks
 }) => {
   const [input, setInput] = useState({
     url: "",
     accessToken: ""
   });
 
-  const [processing, setProcessing] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  var btnstatus = "more";
+  const [accessToken, setAccessToken] = useState("");
+  const [showText, setShowText] = useState("See More");
+  const [controller, setController] = useState(new AbortController());
 
-  function toggleText() {
-    if (btnstatus == "less") {
-      console.log("hey");
-      document.getElementById("aad").innerHTML = "";
-
-      document.getElementById("link").innerHTML = "See More";
-      btnstatus = "more";
-    } else if (btnstatus == "more") {
-      document.getElementById("aad").innerHTML =
-        input.accessToken.substring(500, 600) +
-        "<br />" +
-        input.accessToken.substring(600, 700) +
-        "<br />" +
-        input.accessToken.substring(700, 800) +
-        "<br />" +
-        input.accessToken.substring(800, 900) +
-        "<br />" +
-        input.accessToken.substring(900, 1000) +
-        "<br />" +
-        input.accessToken.substring(1000, 1025);
-
-      document.getElementById("link").innerHTML = "See Less";
-      btnstatus = "less";
+  const handleClick = () => {
+    if (showText === "See More") {
+      setAccessToken(input.accessToken);
+      setShowText("Show Less");
+    } else {
+      setAccessToken(input.accessToken.substring(0, 100));
+      setShowText("Show More");
     }
-  }
+  };
 
   const renderoot = () => {
+    controller.abort();
+    resetChecks();
     setSubmitted(false);
     setInput({ url: "", accessToken: "" });
     resetForm();
     resetParams();
-    setProcessing(false);
   };
 
   const handleChange = event => {
@@ -91,7 +80,9 @@ const RootPage = ({
       if (url.indexOf(" ") >= 0 || accessToken.indexOf(" ") >= 0) {
         alert("Invalid input");
       } else {
+        setController(new AbortController());
         setSubmitted(true);
+        setAccessToken(input.accessToken.substring(0, 100));
         submitForm({ url, accessToken });
         updateUrl(url);
         updateAccessToken(accessToken);
@@ -102,53 +93,14 @@ const RootPage = ({
     }
   };
 
-  useEffect(() => {
-    var process = false;
-    checkStatus.forEach(status => {
-      process = process || status.isLoading;
-    });
-    setProcessing(process);
-  }, [checkStatus]);
-  console.log(input.accessToken.length);
-
   return (
     <div>
       {submitted ? (
         <div>
           <NavbarHome renderoot={renderoot} />
-          <div className="row ">
-            <div className="col-md-12 col-xs-12 col-sm-12 topspace">
-              <Stack tokens={tokens.sectionStack}>
-                <Stack tokens={tokens.headingStack} />
-                <Stack.Item align="center">
-                  <Text block variant={"large"} style={{ fontWeight: "375" }}>
-                    <strong> Url </strong>: {input.url}
-                    <br />
-                    <strong className="nobreak"> AccessToken </strong>:{" "}
-                    {input.accessToken.substring(0, 100)}
-                    <br />
-                    {input.accessToken.substring(100, 200)}
-                    <br />
-                    {input.accessToken.substring(200, 300)}
-                    <br />
-                    {input.accessToken.substring(300, 400)}
-                    <br />
-                    {input.accessToken.substring(400, 500)}
-                    <p id="aad" />
-                    <a
-                      id="link"
-                      onClick={toggleText}
-                      href="javascript:void(0);"
-                    >
-                      See More
-                    </a>
-                  </Text>
-                </Stack.Item>
-              </Stack>
-            </div>
-          </div>
+          <InputsHeader input={input} />
 
-          <ManageProcess submit={submitted} />
+          <ManageProcess submit={submitted} signal={controller.signal} />
         </div>
       ) : (
         <div>
@@ -170,7 +122,6 @@ const RootPage = ({
                   onSave={handleSubmit}
                   url={input.url}
                   accessToken={input.accessToken}
-                  processing={processing}
                 />
               </div>
             </div>
@@ -186,15 +137,13 @@ RootPage.propTypes = {
   submitForm: PropTypes.func.isRequired,
   updateUrl: PropTypes.func.isRequired,
   updateAccessToken: PropTypes.func.isRequired,
-  checkStatus: PropTypes.array.isRequired,
   resetForm: PropTypes.func.isRequired,
-  resetParams: PropTypes.func.isRequired
+  resetParams: PropTypes.func.isRequired,
+  resetChecks: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
-  return {
-    checkStatus: state.checkStatus
-  };
+  return {};
 }
 
 const mapDispatchToProps = {
@@ -202,7 +151,8 @@ const mapDispatchToProps = {
   updateUrl: paramsAction.updateUrl,
   updateAccessToken: paramsAction.updateAccessToken,
   resetForm: formActions.resetForm,
-  resetParams: paramsAction.resetParams
+  resetParams: paramsAction.resetParams,
+  resetChecks: checkActions.resetChecks
 };
 
 export default connect(

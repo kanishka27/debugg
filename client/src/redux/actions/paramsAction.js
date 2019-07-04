@@ -1,5 +1,6 @@
 import { types } from "./actionTypes";
 
+//actions to update different parameters in redux store
 export function updateClient(clientId) {
   return {
     type: types.UPDATE_CLIENT_ID,

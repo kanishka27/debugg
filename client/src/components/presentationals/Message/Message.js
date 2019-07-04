@@ -1,41 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import * as constants from "../../../constants";
 import { initializeIcons } from "@uifabric/icons";
 initializeIcons();
 import { withAITracking } from "@microsoft/applicationinsights-react-js";
 import { ai } from "../../../TelemetryService";
+import ReactHtmlParser from "react-html-parser";
 
-const arr = [
-  "textarea0",
-  "textarea1",
-  "textarea2",
-  "textarea3",
-  "textarea4",
-  "textarea5",
-  "textarea6",
-  "textarea7",
-  "textarea8"
-];
-
-const arrbtn = [
-  "toggleButton1",
-  "toggleButton2",
-  "toggleButton3",
-  "toggleButton4",
-  "toggleButton5",
-  "toggleButton6",
-  "toggleButton7",
-  "toggleButton8",
-  "toggleButton9"
-];
-
-var btnstatus = "more";
 const Message = props => {
   if (props.status.response != null) {
-    var text = props.status.response.result.message;
+    var completeMessage, shortMessage;
+    completeMessage = props.status.response.result.message;
 
-    var res = text.substring(0, 30) + "....";
+    if (completeMessage.length >= 25) {
+      shortMessage = completeMessage.substring(0, 25) + "....";
+    } else shortMessage = completeMessage;
+
     if (
       !props.status.response.status &&
       props.status.response.result.message != "Aborted"
@@ -45,58 +25,57 @@ const Message = props => {
           constants.contacts[props.status.id] ===
           "https://eusapim.portal.azure-api.net"
         ) {
-          text = text.concat(
-            "<br /> Please click  <a href=",
+          completeMessage = completeMessage.concat(
+            "\n",
+            "Please click  <a href=",
             "https://eusapim.portal.azure-api.net",
 
             "> here </a> to onboard"
           );
         } else {
-          text = text.concat(
-            "<br /> Contact: <strong>",
+          completeMessage = completeMessage.concat(
+            "\n",
+            "Contact:  <strong>",
             constants.contacts[props.status.id],
             "</strong>"
           );
         }
       }
+      if (completeMessage.length >= 25) {
+        shortMessage = completeMessage.substring(0, 25) + "....";
+      } else shortMessage = completeMessage;
+    }
+
+    var startText = "";
+    if (completeMessage.length >= 25) startText = shortMessage;
+    else startText = completeMessage;
+  }
+
+  const [textMessage, setTextMessage] = useState(startText);
+  const [showText, setShowText] = useState("See More");
+  // const trackEvent = () =>
+  //   ai.appInsights.trackEvent({ name: "Found Error with User" });
+  // // if (status.response.status === false) trackEvent();
+
+  function handleMessageClick() {
+    if (showText === "See More") {
+      setTextMessage(completeMessage);
+      setShowText("See Less");
+    } else {
+      setTextMessage(shortMessage);
+      setShowText("See More");
     }
   }
-  const trackEvent = () =>
-    ai.appInsights.trackEvent({ name: "Found Error with User" });
-  // if (status.response.status === false) trackEvent();
 
-  function toggleText() {
-    console.log(btnstatus);
-
-    if (btnstatus == "less") {
-      document.getElementById(arr[props.status.id]).innerHTML = res;
-
-      document.getElementById(arrbtn[props.status.id]).innerHTML = "See More";
-      btnstatus = "more";
-    } else if (btnstatus == "more") {
-      document.getElementById(arr[props.status.id]).innerHTML = text;
-      console.log(text);
-      document.getElementById(arrbtn[props.status.id]).innerHTML = "See Less";
-      btnstatus = "less";
-    }
-  }
   return (
-    <div className="rowC">
-      {text.length >= 30 ? (
-        <div data-test="CompleteMessage">
-          <p id={arr[props.status.id]}>{res}</p>
-          <a
-            id={arrbtn[props.status.id]}
-            onClick={toggleText}
-            href="javascript:void(0);"
-          >
-            See More
-          </a>
-        </div>
+    <div>
+      <p className="display-linebreak">{ReactHtmlParser(textMessage)}</p>
+      {completeMessage.length >= 25 ? (
+        <a onClick={handleMessageClick} href="javascript:void(0);">
+          {showText}
+        </a>
       ) : (
-        <span data-test="shortMessage">
-          <p id={arr[props.status.id]}>{text}</p>
-        </span>
+        <div />
       )}
     </div>
   );

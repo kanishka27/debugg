@@ -29,7 +29,7 @@ export default {
     url: "",
     accessToken: "",
     clientId: "",
-    domainAccountKey: "", //TODO:change names
+    domainAccountKey: "",
     sapSystem: "",
     sapService: "",
     environment: "",

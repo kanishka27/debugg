@@ -1,14 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
+function Null({ history }) {
+  useEffect(() => {
+    history.push(`/PendingApprovals`);
+  }, []);
 
-class Null extends React.Component {
-  componentDidMount() {
-    this.props.history.push(`/user`);
-  }
-
-  render() {
-    return <div>redirecting</div>;
-  }
+  return <></>;
 }
 
 export default Null;

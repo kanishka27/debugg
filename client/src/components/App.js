@@ -3,9 +3,6 @@ import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import RootPage from "./RootPage";
 import { createBrowserHistory } from "history";
 import { ai } from "./../TelemetryService";
-import Users from "./Users";
-import NotFound from "./NotFound";
-import Approval from "./Approval";
 import { withAdalLoginApi } from "../config/adalConfig";
 
 const history = createBrowserHistory({ basename: "" });

@@ -2,7 +2,6 @@ import { types } from "./actionTypes";
 import * as checkApi from "../../api/processChecksApi";
 import * as constants from "../../constants";
 import * as paramsActions from "./paramsAction";
-import * as formActions from "./formActions";
 
 // Actions to manage processing of various checks
 
@@ -22,6 +21,7 @@ export function terminateCheck(id) {
 }
 
 export function loadCheckSuccess(response, checkIdentifier) {
+  // action to be dispatched after successful check load
   return {
     type: types.CHECK_LOAD_SUCCESS,
     response,
@@ -30,22 +30,23 @@ export function loadCheckSuccess(response, checkIdentifier) {
 }
 
 export function loadCheckFailure(response, checkIdentifier) {
+  //  action to be dispatched after unsuccessful check load
   return { type: types.CHECK_LOAD_FAILURE, response, checkIdentifier };
 }
 
 function processBody(checkId, params) {
   // generates body for post call
-  return { ...params, checkId: constants.checkIdentifier[checkId] }; //TODO: hardcode keys of different endpoints in constants.js and get them here
+  return { ...params, checkId: constants.checkIdentifier[checkId] };
 }
 
-export function loadCheck(checkIdentifier, params) {
-  // thunk to start the processing of a check
+export function loadCheck(checkIdentifier, params, signal) {
   var body = JSON.stringify(processBody(checkIdentifier, params));
   var url = "/api/processCheck";
 
   return function(dispatch, getState) {
+    // thunk to start the processing of a check
     return checkApi
-      .getResponse(url, body, "POST")
+      .getResponse(url, body, "POST", signal)
       .then(response => {
         console.log(JSON.stringify(response));
         if (getState().form.submitted) {
@@ -83,21 +84,26 @@ export function loadCheck(checkIdentifier, params) {
         }
       })
       .catch(error => {
-        console.log("aa");
-        if (getState().form.submitted) {
-          dispatch(
-            loadCheckFailure(
-              {
-                status: false,
-                result: {
-                  message: error.message
-                }
-              },
-              checkIdentifier
-            )
-          );
+        if (error.name === "AbortError") {
+          // catching error if the network call is aborted
+          console.log("Fetch aborted");
         } else {
-          dispatch(terminateCheck(checkIdentifier));
+          // catching all other errors
+          if (getState().form.submitted) {
+            dispatch(
+              loadCheckFailure(
+                {
+                  status: false,
+                  result: {
+                    message: error.message
+                  }
+                },
+                checkIdentifier
+              )
+            );
+          } else {
+            dispatch(terminateCheck(checkIdentifier));
+          }
         }
       });
   };

@@ -8,48 +8,19 @@ import initialState from "../../redux/reducers/initialState";
 import * as constants from "../../constants";
 import CheckContainer from "../checkContainer/CheckContainer";
 import Table from "react-bootstrap/Table";
-import { withAITracking } from "@microsoft/applicationinsights-react-js";
-import { ai } from "../../TelemetryService";
 
-function MoveDiv() {
-  var elmnt = document.getElementById("TableDiv");
-  console.log("hello");
-  elmnt.scrollIntoView();
-}
-
-function ManageProcess({ checkStatus, actions, form }) {
+function ManageProcess({ checkStatus, actions, form, signal }) {
   const [status, setStatus] = useState(initialState.checkStatus);
+
+  //window.scrollTo(0, 0);
+
   useEffect(() => {
-    var loop = 0;
-    var wait = false;
-    checkStatus.forEach(status => {
-      wait = wait || status.isLoading;
+    actions.setSubmitted();
+    actions.resetChecks();
+    actions.startCheck({
+      ...constants.START_CHECK,
+      dependent: constants.INITIAL_CHECK
     });
-    if (wait) {
-      const interval = setInterval(() => {
-        var wait = false;
-        checkStatus.forEach(status => {
-          wait = wait || status.isLoading;
-        });
-        loop++;
-        if (!wait || loop >= 10) {
-          clearInterval(interval);
-          actions.setSubmitted();
-          actions.resetChecks();
-          actions.startCheck({
-            ...constants.START_CHECK,
-            dependent: constants.INITIAL_CHECK
-          });
-        }
-      }, 500);
-    } else {
-      actions.setSubmitted();
-      actions.resetChecks();
-      actions.startCheck({
-        ...constants.START_CHECK,
-        dependent: constants.INITIAL_CHECK
-      });
-    }
   }, []);
 
   useEffect(() => {
@@ -60,12 +31,8 @@ function ManageProcess({ checkStatus, actions, form }) {
     }
   }, [checkStatus]);
 
-  useEffect(() => {
-    MoveDiv();
-  }, []);
-
   return (
-    <div id="TableDiv" className="container ">
+    <div className="container ">
       <Table responsive className="tablestyle">
         <thead>
           <tr>
@@ -77,7 +44,13 @@ function ManageProcess({ checkStatus, actions, form }) {
         <tbody>
           {status.length > 0 ? (
             status.map(element => {
-              return <CheckContainer key={element.id} status={element} />;
+              return (
+                <CheckContainer
+                  key={element.id}
+                  status={element}
+                  signal={signal}
+                />
+              );
             })
           ) : (
             <>nope</>
@@ -91,7 +64,8 @@ function ManageProcess({ checkStatus, actions, form }) {
 ManageProcess.propTypes = {
   checkStatus: PropTypes.array.isRequired, //array having status object of all checks
   actions: PropTypes.object.isRequired,
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
+  signal: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {

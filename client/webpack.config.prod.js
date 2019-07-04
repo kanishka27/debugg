@@ -79,10 +79,5 @@ module.exports = {
         use: ["file-loader"]
       }
     ]
-    // },
-    // node: {
-    //   fs: "empty",
-    //   net: "empty",
-    //   tls: "empty"
   }
 };

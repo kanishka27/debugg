@@ -19,38 +19,6 @@ const setUp = props => {
   return component;
 };
 
-describe("CheckContainer", () => {
-  let component;
-  it("Should render message component on response", () => {
-    const props = {
-      status: {
-        id: 1,
-        isLoading: false,
-        aborted: false,
-        response: { result: { message: "Aborted" }, status: false }
-      },
-      loadCheck: () => {},
-
-      startCheck: () => {},
-      terminateCheck: () => {},
-      params: {
-        url: "",
-        accessToken: "",
-        clientId: "",
-        domainAccountKey: "",
-        sapService: "",
-        environment: "",
-        resourceId: "",
-        sapUsername: ""
-      }
-    };
-    component = setUp(props);
-
-    const wrapper = findByTestAttr(component, "message-component");
-    expect(wrapper.length).toBe(1);
-  });
-});
-
 describe("Check PropTypes", () => {
   it("Should not throw a warning ", () => {
     const expectedProps = {
